@@ -7,6 +7,7 @@ namespace PbixSerializer
     {
         public string name;
         public string type;
+        public string sourceColumn;
         public string dataType;
         public string[] expression;
         public string summarizeBy;
@@ -22,6 +23,11 @@ namespace PbixSerializer
             {
                 CalculatedColumn cColumn = (CalculatedColumn)c;
                 this.expression = cColumn.Expression.Split('\n');
+            }
+            else if (this.type == "Data")
+            {
+                DataColumn dColumn = (DataColumn)c;
+                this.sourceColumn = dColumn.SourceColumn;
             }
             this.summarizeBy = c.SummarizeBy.ToString();
             this.formatString = c.FormatString;

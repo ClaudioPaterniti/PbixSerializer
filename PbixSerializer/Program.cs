@@ -11,17 +11,22 @@ namespace PbixSerializer
 {
     class Program
     {
+        static char[] invalid_chars = System.IO.Path.GetInvalidFileNameChars();
+        static string sanitize_name(string name)
+        {
+            return String.Join("_", name.Split(Program.invalid_chars, StringSplitOptions.RemoveEmptyEntries));
+        }
         static void serialize_measure(string path, Measure m)
         {
             Pb_measure item = new Pb_measure(m);
-            string out_path = Path.Combine(path, item.name+".json");
+            string out_path = Path.Combine(path, sanitize_name(item.name+".json"));
             string j = JsonConvert.SerializeObject(item, Formatting.Indented);
             File.WriteAllText(out_path, j);
         }
         static void serialize_column(string path, Column c)
         {
             Pb_column item = new Pb_column(c);
-            string out_path = Path.Combine(path, item.name + ".json");
+            string out_path = Path.Combine(path, sanitize_name(item.name + ".json"));
             string j = JsonConvert.SerializeObject(item, Formatting.Indented);
             File.WriteAllText(out_path, j);
         }
@@ -29,10 +34,10 @@ namespace PbixSerializer
         {
             Console.WriteLine("Serializing table: "+ t.Name);
             Pb_table item = new Pb_table(t, relations);
-            string table_path = Path.Combine(path, item.name);
+            string table_path = Path.Combine(path, sanitize_name(item.name));
             DirectoryInfo table_dir = System.IO.Directory.CreateDirectory(table_path);
             string j = JsonConvert.SerializeObject(item, Formatting.Indented);
-            File.WriteAllText(Path.Combine(table_dir.FullName, item.name + ".json"), j);
+            File.WriteAllText(Path.Combine(table_dir.FullName, sanitize_name(item.name + ".json")), j);
             string columns_path = Path.Combine(table_dir.FullName, "Columns");
             DirectoryInfo columns_dir = System.IO.Directory.CreateDirectory(columns_path);
             foreach (Column c in t.Columns)
@@ -53,7 +58,7 @@ namespace PbixSerializer
             DirectoryInfo tables_dir = System.IO.Directory.CreateDirectory(tables_path);
             foreach (Table t in db.Model.Tables)
             {
-                if (!t.IsHidden)
+                if (!t.IsPrivate)
                 {
                     List<Relationship> r;
                     relations.TryGetValue(t.Name, out r);
@@ -64,7 +69,6 @@ namespace PbixSerializer
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Connecting to server");
             string server_port = args[0];
             string database_name = args[1];
             Console.WriteLine($"Server port: {server_port}, Database: {database_name}");
@@ -76,6 +80,7 @@ namespace PbixSerializer
                 server.Connect(ConnectionString);
                 Database db = server.Databases[database_name];
                 Console.WriteLine("Connection Succeeded");
+                Console.WriteLine("Output path: " + Directory.GetCurrentDirectory());
                 if (Directory.Exists("Versioning"))
                 {
                     Console.WriteLine("Deleting current 'Versioning' folder");

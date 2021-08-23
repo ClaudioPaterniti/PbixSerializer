@@ -67,11 +67,15 @@ namespace PbixSerializer
     class Pb_table
     {
         public string name;
+        public bool isHidden;
+        public bool isPrivate;
         public List<Pb_partition> partitions;
         public List<Pb_relation> relationships;
         public Pb_table(Table t, List<Relationship> relations)
         {
             this.name = t.Name;
+            this.isHidden = t.IsHidden;
+            this.isPrivate = t.IsPrivate;
             this.partitions = new List<Pb_partition>();
             foreach (Partition p in t.Partitions)
                 this.partitions.Add(new Pb_partition(p));
