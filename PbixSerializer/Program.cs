@@ -89,7 +89,6 @@ namespace PbixSerializer
                 {
                     Directory.SetCurrentDirectory(select_out.SelectedPath);
                 }
-                Console.WriteLine("Output path: " + Directory.GetCurrentDirectory());
                 if (Directory.Exists("Versioning"))
                 {
                     Console.WriteLine("Deleting current 'Versioning' folder");
