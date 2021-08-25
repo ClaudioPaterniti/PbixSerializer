@@ -1,6 +1,6 @@
 {
 	"version": "1.0",
-  "name": "Pbix Versioning",
+	"name": "Pbix Versioning",
 	"description": "Generate a versioning friendly serialization",
 	"path": "C:\\Users\\%User%\\source\\repos\\PbixSerializer\\PbixSerializer\\bin\\Debug\\PbixSerializer.exe",
 	"arguments": "%server% %database%",
