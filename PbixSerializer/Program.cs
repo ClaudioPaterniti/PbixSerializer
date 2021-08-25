@@ -6,6 +6,7 @@ using System.IO;
 using Microsoft.AnalysisServices.Tabular;
 using Newtonsoft.Json;
 using JsonSerializer = Microsoft.AnalysisServices.Tabular.JsonSerializer;
+using System.Windows.Forms;
 
 namespace PbixSerializer
 {
@@ -67,6 +68,7 @@ namespace PbixSerializer
             }
         }
 
+        [STAThread]
         static void Main(string[] args)
         {
             string server_port = args[0];
@@ -80,6 +82,13 @@ namespace PbixSerializer
                 server.Connect(ConnectionString);
                 Database db = server.Databases[database_name];
                 Console.WriteLine("Connection Succeeded");
+                FolderBrowserDialog select_out = new FolderBrowserDialog();
+                select_out.Description = "Select the output folder";
+                select_out.SelectedPath = Directory.GetCurrentDirectory();
+                if (select_out.ShowDialog() == DialogResult.OK)
+                {
+                    Directory.SetCurrentDirectory(select_out.SelectedPath);
+                }
                 Console.WriteLine("Output path: " + Directory.GetCurrentDirectory());
                 if (Directory.Exists("Versioning"))
                 {
@@ -87,6 +96,7 @@ namespace PbixSerializer
                     Directory.Delete("Versioning", true);
                 }
                 DirectoryInfo base_dir = System.IO.Directory.CreateDirectory("Versioning");
+                Console.WriteLine("Output path: " + Directory.GetCurrentDirectory()+"/Versioning");
                 Console.WriteLine("Processing Relationships");
                 Dictionary<string, List<Relationship>> relations = new Dictionary<string, List<Relationship>>();
                 foreach (Relationship r in db.Model.Relationships)
