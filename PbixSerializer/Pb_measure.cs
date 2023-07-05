@@ -6,6 +6,7 @@ namespace PbixSerializer
     class Pb_measure
     {
         public string name;
+        public string description;
         public string dataType;
         public string[] expression;
         public string displayFolder;
@@ -15,6 +16,7 @@ namespace PbixSerializer
         public Pb_measure(Measure m)
         {
             this.name = m.Name;
+            this.description = m.Description;
             this.dataType = m.DataType.ToString();
             this.expression = m.Expression.Split('\n');
             this.formatString = m.FormatString;

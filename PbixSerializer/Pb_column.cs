@@ -5,7 +5,7 @@ namespace PbixSerializer
 {
     class Pb_column
     {
-        public string name;
+        public string name; public string description;
         public string type;
         public string sourceColumn;
         public string dataType;
@@ -17,6 +17,7 @@ namespace PbixSerializer
         public Pb_column(Column c)
         {
             this.name = c.Name;
+            this.description = c.Description;
             this.type = c.Type.ToString();
             this.dataType = c.DataType.ToString();
             if (this.type == "Calculated")

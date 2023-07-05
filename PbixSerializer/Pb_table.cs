@@ -67,6 +67,7 @@ namespace PbixSerializer
     class Pb_table
     {
         public string name;
+        public string description;
         public bool isHidden;
         public bool isPrivate;
         public List<Pb_partition> partitions;
@@ -74,6 +75,7 @@ namespace PbixSerializer
         public Pb_table(Table t, List<Relationship> relations)
         {
             this.name = t.Name;
+            this.description = t.Description;
             this.isHidden = t.IsHidden;
             this.isPrivate = t.IsPrivate;
             this.partitions = new List<Pb_partition>();
